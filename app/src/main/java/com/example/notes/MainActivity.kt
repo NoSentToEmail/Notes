@@ -2,6 +2,7 @@ package com.example.notes
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.HorizontalScrollView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = NotesAdapter( this, notes)
         recyclerViewNotes.adapter = adapter
+//        recyclerViewNotes.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+//        recyclerViewNotes.layoutManager = LinearLayoutManager(this)
         recyclerViewNotes.layoutManager = GridLayoutManager(this, 3)
 
     }
