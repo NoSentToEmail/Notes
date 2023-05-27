@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Notes</string>
+    <string name="text_view_day_of_week">Kогда:</string>
+    <string name="button_add">Сохранить</string>
+    <string name="hint_title">Заголовок</string>
+    <string name="hint_description">Описание заметки</string>
+    <string name="radioButton1">Не срочно</string>
+    <string name="radioButton2">Умерено</string>
+    <string name="radioButton3">Срочно</string>
+    <string-array name="days_of_week">
+        <item>Понедельник</item>
+        <item>Вторник</item>
+        <item>Среда</item>
+        <item>Четверг</item>
+        <item>Пятница</item>
+        <item>Суббота</item>
+        <item>Воскресенье</item>
+    </string-array>
 </resources>

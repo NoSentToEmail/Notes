@@ -1,23 +1,28 @@
-package com.example.notes
+import android.os.Parcel
+import android.os.Parcelable
 
 class note(
-    private var title: String,
-    private var descriotion:String,
-    private var dayOfWeek:String,
-    private var priority: Int
-    ){
+    private val title: String,
+    private val description: String,
+    private val dayOfWeek: String,
+    private val priority: Int
+)  {
 
-    fun getTitle(): String {
-        return title
-    }
-    fun getDescriotion(): String {
-        return descriotion
-    }
-    fun getDayOfWeek(): String {
-        return dayOfWeek
-    }
-    fun getPriority(): Int {
-        return priority
+        fun getTitle(): String {
+            return title
+        }
+
+        fun getDescriotion(): String {
+            return description
+        }
+
+        fun getDayOfWeek(): String {
+            return dayOfWeek
+        }
+
+        fun getPriority(): Int {
+            return priority
+        }
+
     }
 
-}
