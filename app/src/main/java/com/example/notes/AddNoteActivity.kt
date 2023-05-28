@@ -10,6 +10,8 @@ import android.widget.RadioButton
 import android.widget.Spinner
 import android.widget.RadioGroup
 import note
+import androidx.cardview.widget.CardView
+
 
 
 class AddNoteActivity : AppCompatActivity() {

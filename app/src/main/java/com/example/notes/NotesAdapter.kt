@@ -7,16 +7,33 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import note
+import androidx.cardview.widget.CardView
 
-class NotesAdapter(private val context: Context, var notes: ArrayList<note>) : RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
+interface OnNoteClickListener {
+    fun onNoteClick(position: Int)
+}
 
+class NotesAdapter(private val context: Context, var notes: ArrayList<note>) :
+    RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
 
-    class NotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private var onNoteClickListener: OnNoteClickListener? = null
+
+    fun setOnNoteClickListener(onNoteClickListener: OnNoteClickListener) {
+        this.onNoteClickListener = onNoteClickListener
+    }
+
+    inner class NotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textViewTitle: TextView = itemView.findViewById(R.id.textViewTitle)
         var textViewDescription: TextView = itemView.findViewById(R.id.textViewDescription)
         var textViewDayOfWeek: TextView = itemView.findViewById(R.id.textViewDayOfWeek)
 
+        init {
+            itemView.setOnClickListener {
+                onNoteClickListener?.onNoteClick(adapterPosition)
+            }
+        }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.note_item, parent, false)
         return NotesViewHolder(view)
@@ -29,7 +46,7 @@ class NotesAdapter(private val context: Context, var notes: ArrayList<note>) : R
         holder.textViewDayOfWeek.text = note.getDayOfWeek()
         var colorID = 0
         val priority = note.getPriority()
-        when(priority)  {
+        when (priority) {
             1 -> colorID = holder.itemView.resources.getColor(android.R.color.holo_green_light)
             2 -> colorID = holder.itemView.resources.getColor(android.R.color.holo_orange_light)
             3 -> colorID = holder.itemView.resources.getColor(R.color.red_malin)
@@ -40,6 +57,4 @@ class NotesAdapter(private val context: Context, var notes: ArrayList<note>) : R
     override fun getItemCount(): Int {
         return notes.size
     }
-
-
 }

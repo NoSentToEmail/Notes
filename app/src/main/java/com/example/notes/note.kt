@@ -1,5 +1,7 @@
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.cardview.widget.CardView
+
 
 class note(
     private val title: String,

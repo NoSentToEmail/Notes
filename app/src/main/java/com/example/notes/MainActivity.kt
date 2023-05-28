@@ -1,61 +1,77 @@
 package com.example.notes
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.HorizontalScrollView
-import androidx.recyclerview.widget.GridLayoutManager
+import android.widget.Toast
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import note
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnNoteClickListener {
 
     private lateinit var recyclerViewNotes: RecyclerView
-    lateinit var notes: ArrayList<note>
-    private lateinit var buttonAdd: FloatingActionButton
+    private lateinit var notes: ArrayList<note>
+    private lateinit var notesAdapter: NotesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         recyclerViewNotes = findViewById(R.id.recyclerViewNotes)
-        buttonAdd = findViewById(R.id.buton_add_note)
+        val buttonAdd: FloatingActionButton = findViewById(R.id.buton_add_note)
 
         notes = ArrayList()
-
+        notes.add(note("", "", "", 2))
 
         val intent = intent
-
         if (intent.hasExtra("noteTitle")) {
             val title = intent.getStringExtra("noteTitle")
             val description = intent.getStringExtra("noteDescription")
             val dayOfWeek = intent.getStringExtra("noteDayOfWeek")
-            val priority = intent.getIntExtra("notePriority", 0) // Здесь 0 - значение по умолчанию, если не удалось получить данные
+            val priority = intent.getIntExtra("notePriority", 0)
 
-            // Создаем новый объект Note с переданными данными
             val note = note(title.toString(), description.toString(), dayOfWeek.toString(), priority)
             notes.add(note)
         }
 
-
-
-        val adapter = NotesAdapter( this, notes)
-        recyclerViewNotes.adapter = adapter
-
-        // Варианты отображения списка
-
-//        recyclerViewNotes.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        notesAdapter = NotesAdapter(this, notes)
+        notesAdapter.setOnNoteClickListener(this)
+        recyclerViewNotes.adapter = notesAdapter
         recyclerViewNotes.layoutManager = LinearLayoutManager(this)
-//        recyclerViewNotes.layoutManager = GridLayoutManager(this, 3)
 
-        buttonAdd.setOnClickListener(){
+        buttonAdd.setOnClickListener {
             val intent = Intent(this, AddNoteActivity::class.java)
+            intent.putExtra("noteTitle", "")
+            intent.putExtra("noteDescription", "")
+            intent.putExtra("noteDayOfWeek", "")
+            intent.putExtra("notePriority", 2)
             startActivity(intent)
-
         }
 
+        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
 
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                notes.removeAt(position)
+                notesAdapter.notifyItemRemoved(position)
+            }
+        })
+        itemTouchHelper.attachToRecyclerView(recyclerViewNotes)
+    }
+
+    override fun onNoteClick(position: Int) {
+        val clickedNote = notes[position]
+        Toast.makeText(this, "Clicked note: ${clickedNote.getTitle()}", Toast.LENGTH_SHORT).show()
     }
 }
