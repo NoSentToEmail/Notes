@@ -11,6 +11,7 @@ import androidx.cardview.widget.CardView
 
 interface OnNoteClickListener {
     fun onNoteClick(position: Int)
+    fun onLongCkick(position: Int) : Boolean
 }
 
 class NotesAdapter(private val context: Context, var notes: ArrayList<note>) :
@@ -30,6 +31,9 @@ class NotesAdapter(private val context: Context, var notes: ArrayList<note>) :
         init {
             itemView.setOnClickListener {
                 onNoteClickListener?.onNoteClick(adapterPosition)
+            }
+            itemView.setOnLongClickListener {
+                onNoteClickListener?.onLongCkick(adapterPosition) ?: false
             }
         }
     }

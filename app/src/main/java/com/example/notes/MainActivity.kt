@@ -34,7 +34,8 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
             val dayOfWeek = intent.getStringExtra("noteDayOfWeek")
             val priority = intent.getIntExtra("notePriority", 0)
 
-            val note = note(title.toString(), description.toString(), dayOfWeek.toString(), priority)
+            val note =
+                note(title.toString(), description.toString(), dayOfWeek.toString(), priority)
             notes.add(note)
         }
 
@@ -42,6 +43,9 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
         notesAdapter.setOnNoteClickListener(this)
         recyclerViewNotes.adapter = notesAdapter
         recyclerViewNotes.layoutManager = LinearLayoutManager(this)
+
+
+
 
         buttonAdd.setOnClickListener {
             val intent = Intent(this, AddNoteActivity::class.java)
@@ -52,26 +56,34 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
             startActivity(intent)
         }
 
-        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
+        val itemTouchHelper =
+            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
-                notes.removeAt(position)
-                notesAdapter.notifyItemRemoved(position)
-            }
-        })
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val position = viewHolder.adapterPosition
+                    notes.removeAt(position)
+                    notesAdapter.notifyItemRemoved(position)
+                }
+            })
         itemTouchHelper.attachToRecyclerView(recyclerViewNotes)
     }
 
     override fun onNoteClick(position: Int) {
         val clickedNote = notes[position]
-        Toast.makeText(this, "Clicked note: ${clickedNote.getTitle()}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Clicked note: быстрый клик", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onLongCkick(position: Int): Boolean {
+        val selectedNote = notes[position]
+        Toast.makeText(this, "Clicked note: долгий клик ${selectedNote.getPriority()}", Toast.LENGTH_SHORT).show()
+        return true
+
     }
 }
