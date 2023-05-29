@@ -1,7 +1,11 @@
 package com.example.notes
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -16,10 +20,14 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
     private lateinit var recyclerViewNotes: RecyclerView
     private lateinit var notes: ArrayList<note>
     private lateinit var notesAdapter: NotesAdapter
+    private lateinit var dbHelper: NotesBDHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        dbHelper = NotesBDHelper(this)
+        val database: SQLiteDatabase = dbHelper.writableDatabase
+
 
         recyclerViewNotes = findViewById(R.id.recyclerViewNotes)
         val buttonAdd: FloatingActionButton = findViewById(R.id.buton_add_note)
@@ -38,8 +46,32 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
                 note(title.toString(), description.toString(), dayOfWeek.toString(), priority)
             notes.add(note)
         }
+        val notesFromDB = ArrayList<note>()
+        for(note:note in notes){
+            val contentValues = ContentValues()
+            contentValues.put(NotesContract.NotesEntry().COLUMN_TITLE, note.getTitle())
+            contentValues.put(NotesContract.NotesEntry().COLUMN_DESCRIPTION, note.getDescriotion())
+            contentValues.put(NotesContract.NotesEntry().COLUMN_DAY_OF_WEEK, note.getDayOfWeek())
+            contentValues.put(NotesContract.NotesEntry().COLUMN_PRIORITY, note.getPriority())
+            database.insert(NotesContract.NotesEntry().TABLE_NAME, null, contentValues)
+        }
 
-        notesAdapter = NotesAdapter(this, notes)
+
+        val cursol:Cursor = database.query(NotesContract.NotesEntry().TABLE_NAME, null,
+            null,null,null,null,null,null)
+
+
+        while(cursol.moveToNext()){
+            val title = cursol.getString(cursol.getColumnIndex(NotesContract.NotesEntry().COLUMN_TITLE))
+            val description = cursol.getString(cursol.getColumnIndex(NotesContract.NotesEntry().COLUMN_DESCRIPTION))
+            val day_of_week = cursol.getString(cursol.getColumnIndex(NotesContract.NotesEntry().COLUMN_DAY_OF_WEEK))
+            val priority: Int = cursol.getInt(cursol.getColumnIndex(NotesContract.NotesEntry().COLUMN_PRIORITY))
+            val note:note = note(title,description,day_of_week, priority)
+            notesFromDB.add(note)
+        }
+        cursol.close()
+
+        notesAdapter = NotesAdapter(this, notesFromDB)
         notesAdapter.setOnNoteClickListener(this)
         recyclerViewNotes.adapter = notesAdapter
         recyclerViewNotes.layoutManager = LinearLayoutManager(this)
@@ -68,7 +100,7 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val position = viewHolder.adapterPosition
-                    notes.removeAt(position)
+                    notesFromDB.removeAt(position)
                     notesAdapter.notifyItemRemoved(position)
                 }
             })
@@ -77,7 +109,7 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
 
     override fun onNoteClick(position: Int) {
         val clickedNote = notes[position]
-        Toast.makeText(this, "Clicked note: быстрый клик", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Clicked note: быстрый клик${clickedNote.getPriority()}", Toast.LENGTH_SHORT).show()
     }
 
     override fun onLongCkick(position: Int): Boolean {
