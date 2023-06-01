@@ -46,7 +46,7 @@ class NotesAdapter(private val context: Context, var notes: ArrayList<note>) :
         val note: note = notes[position]
         holder.textViewTitle.text = note.getTitle()
         holder.textViewDescription.text = note.getDescriotion()
-        holder.textViewDayOfWeek.text = note.getDayAsString(note.getDayOfWeek())
+        holder.textViewDayOfWeek.text = note.getDayAsString(note.getDayOfWeek() +1)
         var colorID = 0
         val priority = note.getPriority()
         when (priority) {
