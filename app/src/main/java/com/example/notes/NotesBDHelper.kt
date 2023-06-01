@@ -9,7 +9,7 @@ import androidx.annotation.RequiresApi
 class NotesBDHelper(
     context: Context?,
     private var DB_NAME: String = "notes.db",
-    private var DB_VERSION: Int = 1
+    private var DB_VERSION: Int = 2
 ) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase?) {

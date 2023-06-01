@@ -1,77 +1,52 @@
 package com.example.notes
 
-import android.content.ContentValues
-import android.content.Context
+import note
 import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.BaseColumns
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import note
 
 class MainActivity : AppCompatActivity(), OnNoteClickListener {
 
     private lateinit var recyclerViewNotes: RecyclerView
-    private lateinit var notes: ArrayList<note>
+    private var notes: ArrayList<note> = ArrayList()
     private lateinit var notesAdapter: NotesAdapter
     private lateinit var dbHelper: NotesBDHelper
+    private lateinit var database: SQLiteDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         dbHelper = NotesBDHelper(this)
-        val database: SQLiteDatabase = dbHelper.writableDatabase
-
-
+        database = dbHelper.writableDatabase
+        getData()
         recyclerViewNotes = findViewById(R.id.recyclerViewNotes)
         val buttonAdd: FloatingActionButton = findViewById(R.id.buton_add_note)
 
         notes = ArrayList()
-        notes.add(note("", "", "", 2))
 
-        val intent = intent
-        if (intent.hasExtra("noteTitle")) {
-            val title = intent.getStringExtra("noteTitle")
-            val description = intent.getStringExtra("noteDescription")
-            val dayOfWeek = intent.getStringExtra("noteDayOfWeek")
-            val priority = intent.getIntExtra("notePriority", 0)
+        val cursor:Cursor = database.query(NotesContract.NotesEntry().TABLE_NAME, null,
+            null,null,null,null,null)
 
-            val note =
-                note(title.toString(), description.toString(), dayOfWeek.toString(), priority)
+        while(cursor.moveToNext()){
+            var id = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val title = cursor.getString(cursor.getColumnIndex(NotesContract.NotesEntry().COLUMN_TITLE))
+            val description = cursor.getString(cursor.getColumnIndex(NotesContract.NotesEntry().COLUMN_DESCRIPTION))
+            val day_of_week = cursor.getInt(cursor.getColumnIndex(NotesContract.NotesEntry().COLUMN_DAY_OF_WEEK))
+            val priority: Int = cursor.getInt(cursor.getColumnIndex(NotesContract.NotesEntry().COLUMN_PRIORITY))
+            val note:note = note(id, title,description,day_of_week, priority)
             notes.add(note)
         }
-        val notesFromDB = ArrayList<note>()
-        for(note:note in notes){
-            val contentValues = ContentValues()
-            contentValues.put(NotesContract.NotesEntry().COLUMN_TITLE, note.getTitle())
-            contentValues.put(NotesContract.NotesEntry().COLUMN_DESCRIPTION, note.getDescriotion())
-            contentValues.put(NotesContract.NotesEntry().COLUMN_DAY_OF_WEEK, note.getDayOfWeek())
-            contentValues.put(NotesContract.NotesEntry().COLUMN_PRIORITY, note.getPriority())
-            database.insert(NotesContract.NotesEntry().TABLE_NAME, null, contentValues)
-        }
+        cursor.close()
 
-
-        val cursol:Cursor = database.query(NotesContract.NotesEntry().TABLE_NAME, null,
-            null,null,null,null,null,null)
-
-
-        while(cursol.moveToNext()){
-            val title = cursol.getString(cursol.getColumnIndex(NotesContract.NotesEntry().COLUMN_TITLE))
-            val description = cursol.getString(cursol.getColumnIndex(NotesContract.NotesEntry().COLUMN_DESCRIPTION))
-            val day_of_week = cursol.getString(cursol.getColumnIndex(NotesContract.NotesEntry().COLUMN_DAY_OF_WEEK))
-            val priority: Int = cursol.getInt(cursol.getColumnIndex(NotesContract.NotesEntry().COLUMN_PRIORITY))
-            val note:note = note(title,description,day_of_week, priority)
-            notesFromDB.add(note)
-        }
-        cursol.close()
-
-        notesAdapter = NotesAdapter(this, notesFromDB)
+        notesAdapter = NotesAdapter(this, notes)
         notesAdapter.setOnNoteClickListener(this)
         recyclerViewNotes.adapter = notesAdapter
         recyclerViewNotes.layoutManager = LinearLayoutManager(this)
@@ -100,7 +75,11 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val position = viewHolder.adapterPosition
-                    notesFromDB.removeAt(position)
+                    val id = notes.get(position).getId()
+                    val where = BaseColumns._ID + "=?"
+                    val whereArgs: String = Integer.toString(id)
+                    database.delete(NotesContract.NotesEntry().TABLE_NAME, where, arrayOf(whereArgs))
+                    getData()
                     notesAdapter.notifyItemRemoved(position)
                 }
             })
@@ -117,5 +96,21 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
         Toast.makeText(this, "Clicked note: долгий клик ${selectedNote.getPriority()}", Toast.LENGTH_SHORT).show()
         return true
 
+    }
+    private fun getData(){
+        notes.clear()
+        val cursor:Cursor = database.query(NotesContract.NotesEntry().TABLE_NAME, null,
+            null,null,null,null,null)
+
+        while(cursor.moveToNext()){
+            val id = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val title = cursor.getString(cursor.getColumnIndex(NotesContract.NotesEntry().COLUMN_TITLE))
+            val description = cursor.getString(cursor.getColumnIndex(NotesContract.NotesEntry().COLUMN_DESCRIPTION))
+            val day_of_week = cursor.getInt(cursor.getColumnIndex(NotesContract.NotesEntry().COLUMN_DAY_OF_WEEK))
+            val priority: Int = cursor.getInt(cursor.getColumnIndex(NotesContract.NotesEntry().COLUMN_PRIORITY))
+            val note:note = note(id, title,description,day_of_week, priority)
+            notes.add(note)
+        }
+        cursor.close()
     }
 }

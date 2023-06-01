@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import note
-import androidx.cardview.widget.CardView
 
 interface OnNoteClickListener {
     fun onNoteClick(position: Int)
@@ -47,7 +46,7 @@ class NotesAdapter(private val context: Context, var notes: ArrayList<note>) :
         val note: note = notes[position]
         holder.textViewTitle.text = note.getTitle()
         holder.textViewDescription.text = note.getDescriotion()
-        holder.textViewDayOfWeek.text = note.getDayOfWeek()
+        holder.textViewDayOfWeek.text = note.getDayAsString(note.getDayOfWeek())
         var colorID = 0
         val priority = note.getPriority()
         when (priority) {

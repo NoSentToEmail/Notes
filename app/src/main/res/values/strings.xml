@@ -7,6 +7,7 @@
     <string name="radioButton1">Не срочно</string>
     <string name="radioButton2">Умерено</string>
     <string name="radioButton3">Срочно</string>
+    <string name="warning_fill_fils">все поля должны быть заполнены</string>
     <string-array name="days_of_week">
         <item>Понедельник</item>
         <item>Вторник</item>
