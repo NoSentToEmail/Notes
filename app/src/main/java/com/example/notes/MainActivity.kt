@@ -1,6 +1,5 @@
 package com.example.notes
 
-import Note
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.InternalCoroutinesApi
+import androidx.room.RoomDatabase
+import androidx.room.Database
+import com.example.notes.NotesDatabase
 
 
 @OptIn(InternalCoroutinesApi::class)

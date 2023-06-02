@@ -10,7 +10,6 @@ import android.widget.Spinner
 import android.widget.RadioGroup
 import android.widget.Toast
 import kotlinx.coroutines.InternalCoroutinesApi
-import Note
 
 
 @OptIn(InternalCoroutinesApi::class)
