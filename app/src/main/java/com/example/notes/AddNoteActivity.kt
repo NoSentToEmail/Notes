@@ -1,8 +1,6 @@
 package com.example.notes
 
-import android.content.ContentValues
 import android.content.Intent
-import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -12,7 +10,7 @@ import android.widget.Spinner
 import android.widget.RadioGroup
 import android.widget.Toast
 import kotlinx.coroutines.InternalCoroutinesApi
-import note
+import Note
 
 
 @OptIn(InternalCoroutinesApi::class)
@@ -58,7 +56,7 @@ class AddNoteActivity : AppCompatActivity() {
 
 
             if(isFilled(title, descriotion)){
-                val note = note(0, title, descriotion, dayOfWeek, priority)
+                val note = Note(0, title, descriotion, dayOfWeek, priority)
                 database.notesDao().insertNote(note)
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)

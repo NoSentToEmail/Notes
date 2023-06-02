@@ -1,12 +1,9 @@
 package com.example.notes
 
-import note
+import Note
 import android.content.Intent
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.BaseColumns
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +16,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 class MainActivity : AppCompatActivity(), OnNoteClickListener {
 
     private lateinit var recyclerViewNotes: RecyclerView
-    private var notes: ArrayList<note> = ArrayList()
+    private var notes: ArrayList<Note> = ArrayList()
     private lateinit var notesAdapter: NotesAdapter
     private lateinit var database: NotesDatabase
 
@@ -92,7 +89,7 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
 
     }
     private fun getData(){
-        val noteFromDB: List<note> = database.notesDao().getAllNotes
+        val noteFromDB: List<Note> = database.notesDao().getAllNotes
         notes.clear()
         notes.addAll(noteFromDB)
     }

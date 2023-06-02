@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import note
+import Note
 
 interface OnNoteClickListener {
     fun onNoteClick(position: Int)
     fun onLongCkick(position: Int) : Boolean
 }
 
-class NotesAdapter(private val context: Context, var notes: ArrayList<note>) :
+class NotesAdapter(private val context: Context, var notes: ArrayList<Note>) :
     RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
 
     private var onNoteClickListener: OnNoteClickListener? = null
@@ -43,7 +43,7 @@ class NotesAdapter(private val context: Context, var notes: ArrayList<note>) :
     }
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
-        val note: note = notes[position]
+        val note: Note = notes[position]
         holder.textViewTitle.text = note.getTitle()
         holder.textViewDescription.text = note.getDescriotion()
         holder.textViewDayOfWeek.text = note.getDayAsString(note.getDayOfWeek() +1)

@@ -1,8 +1,8 @@
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "note")
-class note(
+@Entity(tableName = "Note")
+class Note(
     @PrimaryKey(autoGenerate = true)
     private var id: Int,
     private val title: String,
