@@ -7,8 +7,8 @@ import androidx.room.Query
 
 @Dao
 interface NotesDao {
-    @get:Query("SELECT * FROM note ORDER BY dayOfWeek")
-    val getAllNotes: List<Note>
+    @Query("SELECT * FROM notes ORDER BY dayOfWeek")
+    fun getAllNotes(): List<Note>
 
     @Insert
     fun insertNote(note: Note)
@@ -16,6 +16,6 @@ interface NotesDao {
     @Delete
     fun deleteNote(note: Note)
 
-    @Query("DELETE FROM note")
+    @Query("DELETE FROM notes")
     fun deleteAllNotes()
 }

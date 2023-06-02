@@ -44,11 +44,11 @@ class NotesAdapter(private val context: Context, var notes: ArrayList<Note>) :
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
         val note: Note = notes[position]
-        holder.textViewTitle.text = note.getTitle()
-        holder.textViewDescription.text = note.getDescriotion()
-        holder.textViewDayOfWeek.text = note.getDayAsString(note.getDayOfWeek() +1)
+        holder.textViewTitle.text = note.title
+        holder.textViewDescription.text = note.description
+        holder.textViewDayOfWeek.text = note.getDayAsString(note.dayOfWeek +1)
         var colorID = 0
-        val priority = note.getPriority()
+        val priority = note.priority
         when (priority) {
             1 -> colorID = holder.itemView.resources.getColor(android.R.color.holo_green_light)
             2 -> colorID = holder.itemView.resources.getColor(android.R.color.holo_orange_light)

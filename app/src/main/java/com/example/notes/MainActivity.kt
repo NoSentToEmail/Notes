@@ -25,13 +25,12 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        database = NotesDatabase.getInstance(this)
+        database = NotesDatabase.getInstance(this.applicationContext)
 
         recyclerViewNotes = findViewById(R.id.recyclerViewNotes)
         val buttonAdd: FloatingActionButton = findViewById(R.id.buton_add_note)
 
 
-        getData()
 
         notesAdapter = NotesAdapter(this, notes)
         notesAdapter.setOnNoteClickListener(this)
@@ -69,29 +68,32 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
                 }
             })
         itemTouchHelper.attachToRecyclerView(recyclerViewNotes)
+
+        getData()
+
     }
 
     override fun onNoteClick(position: Int) {
         val clickedNote = notes[position]
-        Toast.makeText(this, "Clicked note: быстрый клик${clickedNote.getPriority()}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Clicked note: быстрый клик${clickedNote.priority}", Toast.LENGTH_SHORT).show()
     }
 
     override fun onLongCkick(position: Int): Boolean {
         val selectedNote = notes[position]
-        Toast.makeText(this, "Clicked note: долгий клик ${selectedNote.getPriority()}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Clicked note: долгий клик ${selectedNote.priority}", Toast.LENGTH_SHORT).show()
 
         val intent = Intent(this, AddNoteActivity::class.java)
-        intent.putExtra("noteTitle", selectedNote.getTitle())
-        intent.putExtra("noteDescription", selectedNote.getDescriotion())
-        intent.putExtra("noteDayOfWeek", selectedNote.getDayOfWeek())
-        intent.putExtra("notePriority", selectedNote.getPriority())
+        intent.putExtra("noteTitle", selectedNote.title)
+        intent.putExtra("noteDescription", selectedNote.description)
+        intent.putExtra("noteDayOfWeek", selectedNote.dayOfWeek)
+        intent.putExtra("notePriority", selectedNote.priority)
         startActivity(intent)
 
         return true
 
     }
     private fun getData(){
-        val noteFromDB: List<Note> = database.notesDao().getAllNotes
+        val noteFromDB: List<Note> = database.notesDao().getAllNotes()
         notes.clear()
         notes.addAll(noteFromDB)
     }

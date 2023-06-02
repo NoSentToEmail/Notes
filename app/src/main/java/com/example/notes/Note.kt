@@ -1,39 +1,25 @@
 package com.example.notes
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "Note")
-class Note(
+@Entity(tableName = "notes")
+data class Note(
     @PrimaryKey(autoGenerate = true)
-    private var id: Int,
-    private val title: String,
-    private val description: String,
-    private val dayOfWeek: Int,
-    private val priority: Int
+    var id: Int = 0,
+    var title: String,
+    var description: String,
+    var dayOfWeek: Int,
+    var priority: Int
 ) {
-    fun getId():Int{
-        return id
-    }
+    @Ignore
+    constructor(title: String, description: String, dayOfWeek: Int, priority: Int) :
+            this(0, title, description, dayOfWeek, priority)
 
-    fun getTitle(): String {
-        return title
-    }
 
-    fun getDescriotion(): String {
-        return description
-    }
-
-    fun getDayOfWeek(): Int {
-        return dayOfWeek
-    }
-
-    fun getPriority(): Int {
-        return priority
-    }
-
-    fun getDayAsString(posotion:Int): String {
-        return when (posotion) {
+    fun getDayAsString(position: Int): String {
+        return when (position) {
             1 -> "Понедельник"
             2 -> "Вторник"
             3 -> "Среда"
@@ -43,8 +29,5 @@ class Note(
             7 -> "Воскресенье"
             else -> ""
         }
-
     }
-
 }
-
