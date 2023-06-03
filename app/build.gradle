@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.kapt' // добавьте этот плагин
+    id 'org.jetbrains.kotlin.kapt'  // добавьте этот плагин
 }
 
 android {
@@ -72,7 +72,10 @@ dependencies {
 
 
     var room_version = "2.5.1"
-    var lifecycle_version = "2.2.0"
+
+    var lifecycle_version = "2.6.1"
+    var arch_version = "2.2.0"
+
 //    kapt "android.arch.persistence.room:compiler:1.1.1"
 
     implementation("androidx.room:room-runtime:$room_version")
@@ -88,19 +91,14 @@ dependencies {
 //   annotationProcessor \"android.arch.lifecycle:compiler:+\"
 
     kapt "android.arch.persistence.room:compiler:1.1.1"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
     testImplementation 'androidx.arch.core:core-testing:2.2.0'
     testImplementation 'androidx.lifecycle:lifecycle-runtime-testing:2.6.1'
 
-}
-dependencies {
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    var room_version = "2.5.1"
 
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
@@ -127,8 +125,8 @@ dependencies {
     // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
 
-    var lifecycle_version = "2.6.1"
-    var arch_version = "2.2.0"
+
+
 
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
