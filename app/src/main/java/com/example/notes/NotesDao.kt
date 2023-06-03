@@ -5,19 +5,24 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.notes.NotesDatabase
+import androidx.room.Update
+import com.example.notes.NoteDatabase
 
 @Dao
-interface NotesDao {
-    @Query("SELECT * FROM notes ORDER BY dayOfWeek DESC")
-    fun getAllNotes(): LiveData<List<Note>>
+interface NoteDao {
 
     @Insert
-    fun insertNote(note: Note)
+    fun insert(note: Note)
+
+    @Query("SELECT * FROM note_table ORDER BY priority DESC")
+    fun getAllNotes(): LiveData<List<Note>>
+
+    @Query("DELETE FROM note_table")
+    fun deleteAllNotes()
 
     @Delete
-    fun deleteNote(note: Note)
+    fun delete(note: Note)
 
-    @Query("DELETE FROM notes")
-    fun deleteAllNotes()
+    @Update
+    fun update(note: Note)
 }

@@ -9,31 +9,31 @@ import kotlinx.coroutines.internal.synchronized
 import kotlinx.coroutines.InternalCoroutinesApi
 import com.example.notes.Note
 import kotlin.math.log
-import com.example.notes.NotesDatabase
 
 
 @OptIn(InternalCoroutinesApi::class)
-@Database(entities = [Note::class], version = 2, exportSchema = false)
-abstract class NotesDatabase : RoomDatabase() {
+@Database(entities = [Note::class], version = 1)
+abstract class NoteDatabase : RoomDatabase() {
 
-    abstract fun notesDao() : NotesDao
+    abstract fun noteDao(): NoteDao
+
     companion object {
+        private var instance: NoteDatabase? = null
 
-        private  var database: NotesDatabase ?= null
-
-        private val DB_NAME = "notes2.db"
-        private val LOCK: Any = Any()
-
-        fun getInstance(context: Context): NotesDatabase {
-            synchronized(LOCK) {
-                if (database == null) {
-                    database = Room.databaseBuilder(context.applicationContext, NotesDatabase::class.java, DB_NAME).build()
+        fun getInstance(context: Context): NoteDatabase {
+            if (instance == null) {
+                synchronized(NoteDatabase::class) {
+                    instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        NoteDatabase::class.java, "note_database"
+                    )
+                        .fallbackToDestructiveMigration()
+                        .build()
                 }
             }
-            return database ?: throw IllegalStateException("Database instance is null")
+            return instance!!
         }
     }
-
 }
 
 

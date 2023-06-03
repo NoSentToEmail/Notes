@@ -21,7 +21,7 @@ class AddNoteActivity : AppCompatActivity() {
     private lateinit var radioGroupPriority: RadioGroup
     private lateinit var buttonSaveNote: Button
 
-    private lateinit var database: NotesDatabase
+    private lateinit var database: NoteDatabase
 
     @OptIn(InternalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +34,7 @@ class AddNoteActivity : AppCompatActivity() {
         radioGroupPriority = findViewById(R.id.radioGroupPriority)
         buttonSaveNote = findViewById(R.id.buttonSaveNote)
 
-        database = NotesDatabase.getInstance(this)
+        database = NoteDatabase.getInstance(this)
 
 
 
@@ -56,7 +56,6 @@ class AddNoteActivity : AppCompatActivity() {
 
             if(isFilled(title, descriotion)){
                 val note = Note(0, title, descriotion, dayOfWeek, priority)
-                database.notesDao().insertNote(note)
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             }else{

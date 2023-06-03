@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.InternalCoroutinesApi
 import androidx.room.RoomDatabase
 import androidx.room.Database
-import com.example.notes.NotesDatabase
+import com.example.notes.NoteDatabase
 
 
 @OptIn(InternalCoroutinesApi::class)
@@ -22,12 +23,15 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
     private lateinit var recyclerViewNotes: RecyclerView
     private var notes: ArrayList<Note> = ArrayList()
     private lateinit var notesAdapter: NotesAdapter
-    private lateinit var database: NotesDatabase
+    private lateinit var database: NoteDatabase
+    private lateinit var noteViewModel: NoteViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        database = NotesDatabase.getInstance(this.applicationContext)
+        database = NoteDatabase.getInstance(this.applicationContext)
+        val factory = NoteViewModel(application)
 
         recyclerViewNotes = findViewById(R.id.recyclerViewNotes)
         val buttonAdd: FloatingActionButton = findViewById(R.id.buton_add_note)
@@ -65,7 +69,7 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val position = viewHolder.adapterPosition
                     val note = notes.get(position)
-                    database.notesDao().deleteNote(note)
+                    database.noteDao().deleteAllNotes()
 
                 }
             })
@@ -95,7 +99,7 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
 
     }
     private fun getData(){
-        val noteFromDB: LiveData<List<Note>> = database.notesDao().getAllNotes()
+        val noteFromDB: LiveData<List<Note>> = database.noteDao().getAllNotes()
         noteFromDB.observe(this,  Observer<List<Note>>() {
             notes.clear()
             notes.addAll(it)
