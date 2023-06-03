@@ -9,9 +9,11 @@ import kotlinx.coroutines.internal.synchronized
 import kotlinx.coroutines.InternalCoroutinesApi
 import com.example.notes.Note
 import kotlin.math.log
+import com.example.notes.NotesDatabase
+
 
 @OptIn(InternalCoroutinesApi::class)
-@Database(entities = [Note::class], version = 1, exportSchema = false)
+@Database(entities = [Note::class], version = 2, exportSchema = false)
 abstract class NotesDatabase : RoomDatabase() {
 
     abstract fun notesDao() : NotesDao
