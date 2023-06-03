@@ -27,9 +27,7 @@ abstract class NotesDatabase : RoomDatabase() {
         fun getInstance(context: Context): NotesDatabase {
             synchronized(LOCK) {
                 if (database == null) {
-                    database = Room.databaseBuilder(context.applicationContext, NotesDatabase::class.java, DB_NAME)
-                        .allowMainThreadQueries()
-                        .build()
+                    database = Room.databaseBuilder(context.applicationContext, NotesDatabase::class.java, DB_NAME).build()
                 }
             }
             return database ?: throw IllegalStateException("Database instance is null")

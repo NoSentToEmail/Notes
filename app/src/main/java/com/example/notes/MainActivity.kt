@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
 
         notesAdapter = NotesAdapter(this, notes)
         notesAdapter.setOnNoteClickListener(this)
+        getData()
         recyclerViewNotes.adapter = notesAdapter
         recyclerViewNotes.layoutManager = LinearLayoutManager(this)
 
@@ -63,8 +66,7 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
                     val position = viewHolder.adapterPosition
                     val note = notes.get(position)
                     database.notesDao().deleteNote(note)
-                    getData()
-                    notesAdapter.notifyItemRemoved(position)
+
                 }
             })
         itemTouchHelper.attachToRecyclerView(recyclerViewNotes)
@@ -93,8 +95,11 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
 
     }
     private fun getData(){
-        val noteFromDB: List<Note> = database.notesDao().getAllNotes()
-        notes.clear()
-        notes.addAll(noteFromDB)
+        val noteFromDB: LiveData<List<Note>> = database.notesDao().getAllNotes()
+        noteFromDB.observe(this,  Observer<List<Note>>() {
+            notes.clear()
+            notes.addAll(it)
+            notesAdapter.notifyDataSetChanged()
+        })
     }
 }
