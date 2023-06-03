@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt'  // добавьте этот плагин
+    id("com.google.devtools.ksp") version "1.8.10-1.0.9" apply false
+
 }
 
 android {
@@ -89,7 +91,7 @@ dependencies {
 // замените annotationProcessor на kapt для этих зависимостей
 //   annotationProcessor \"android.arch.persistence.room:compiler:+\"
 //   annotationProcessor \"android.arch.lifecycle:compiler:+\"
-
+    kapt 'androidx.room:room-compiler:2.5.1'
     kapt "android.arch.persistence.room:compiler:1.1.1"
     testImplementation 'androidx.arch.core:core-testing:2.2.0'
     testImplementation 'androidx.lifecycle:lifecycle-runtime-testing:2.6.1'

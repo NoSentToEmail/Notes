@@ -9,6 +9,7 @@ import android.widget.RadioButton
 import android.widget.Spinner
 import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.InternalCoroutinesApi
 
 
@@ -21,7 +22,7 @@ class AddNoteActivity : AppCompatActivity() {
     private lateinit var radioGroupPriority: RadioGroup
     private lateinit var buttonSaveNote: Button
 
-    private lateinit var database: NotesDatabase
+    private lateinit var viewModel: MainViewModel
 
     @OptIn(InternalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +35,7 @@ class AddNoteActivity : AppCompatActivity() {
         radioGroupPriority = findViewById(R.id.radioGroupPriority)
         buttonSaveNote = findViewById(R.id.buttonSaveNote)
 
-        database = NotesDatabase.getInstance(this)
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
 
 
@@ -54,17 +55,18 @@ class AddNoteActivity : AppCompatActivity() {
 //            val priority:Int = Integer.parseInt(radioButton.text.toString())
 
 
-            if(isFilled(title, descriotion)){
+            if (isFilled(title, descriotion)) {
                 val note = Note(0, title, descriotion, dayOfWeek, priority)
-                database.notesDao().insertNote(note)
+                viewModel.insert(note)
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
-            }else{
+            } else {
                 Toast.makeText(this, R.string.warning_fill_fils, Toast.LENGTH_SHORT).show()
             }
         }
 
     }
+
     private fun isFilled(title: String, description: String): Boolean {
         return !title.isEmpty() && !description.isEmpty()
     }
