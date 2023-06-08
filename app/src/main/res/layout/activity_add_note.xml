@@ -7,13 +7,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#CDDBDE"
-    android:layout_margin="4dp">
+    android:layout_margin="4dp"
+    tools:context="com.example.notes.AddNoteActivity">
+
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".AddNoteActivity">
+        android:layout_height="match_parent">
 
         <EditText
             android:id="@+id/editTextTitle"

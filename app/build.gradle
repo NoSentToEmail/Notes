@@ -1,50 +1,24 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.kapt'  // добавьте этот плагин
-    id("com.google.devtools.ksp") version "1.8.10-1.0.9" apply false
-
+    id 'kotlin-kapt' // Добавьте эту строку
 }
 
 android {
     namespace 'com.example.notes'
     compileSdk 33
 
+
     defaultConfig {
-        applicationId "com.example.notes"
+        applicationId "com.example.mymovis"
         minSdk 21
         targetSdk 33
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        java {
-            toolchain {
-                languageVersion = JavaLanguageVersion.of(8)
-            }
-        }
-        javaCompileOptions {
-            annotationProcessorOptions {
-                annotationProcessorOptions {
-                    arguments.put("room.schemaLocation", "$projectDir/schemas")
-                    arguments.put("room.incremental", "true")
-                }
-            }
-        }
     }
 
-    kapt {
-        javacOptions {
-            // Increase the max count of errors from annotation processors.
-            // Default is 100.
-            option("-Xmaxerrs", 500)
-        }
-        useBuildCache = false
-//        generateStubs = true
-        arguments {
-            arg("key", "value")
-        }
-    }
 
     buildTypes {
         release {
@@ -54,81 +28,43 @@ android {
     }
 
     compileOptions {
-        targetCompatibility = "1.8"
-        sourceCompatibility = "1.8"
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
         jvmTarget = '1.8'
     }
 }
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    kapt {
+        arguments {
+            arg("key", "value")
+        }
+        useBuildCache = false
+
+    }
+}
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.10.1'
+
+    implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-//    kapt 'androidx.room:room-compiler:2.5.1' // закомментируйте или удалите эту строку
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation 'com.squareup.picasso:picasso:2.8'
 
-//    kapt "android.arch.persistence.room:compiler:1.1.1"
-
-
-    var room_version = "2.5.1"
+    kapt("org.jetbrains.kotlin:kotlin-annotation-processing-gradle:1.8.21")
 
     var lifecycle_version = "2.6.1"
     var arch_version = "2.2.0"
-
-//    kapt "android.arch.persistence.room:compiler:1.1.1"
-
-    implementation("androidx.room:room-runtime:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-    implementation("androidx.room:room-rxjava2:$room_version")
-    implementation("androidx.room:room-rxjava3:$room_version")
-    implementation("androidx.room:room-guava:$room_version")
-    testImplementation("androidx.room:room-testing:$room_version")
-    implementation("androidx.room:room-paging:$room_version")
-
-// замените annotationProcessor на kapt для этих зависимостей
-//   annotationProcessor \"android.arch.persistence.room:compiler:+\"
-//   annotationProcessor \"android.arch.lifecycle:compiler:+\"
-    kapt 'androidx.room:room-compiler:2.5.1'
-    kapt "android.arch.persistence.room:compiler:1.1.1"
-    testImplementation 'androidx.arch.core:core-testing:2.2.0'
-    testImplementation 'androidx.lifecycle:lifecycle-runtime-testing:2.6.1'
-
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-
-
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
-
-    // To use Kotlin annotation processing tool (kapt)
-    kapt("androidx.room:room-compiler:$room_version")
-    // To use Kotlin Symbol Processing (KSP)
-
-    // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:$room_version")
-
-    // optional - RxJava2 support for Room
-    implementation("androidx.room:room-rxjava2:$room_version")
-
-    // optional - RxJava3 support for Room
-    implementation("androidx.room:room-rxjava3:$room_version")
-
-    // optional - Guava support for Room, including Optional and ListenableFuture
-    implementation("androidx.room:room-guava:$room_version")
-
-    // optional - Test helpers
-    testImplementation("androidx.room:room-testing:$room_version")
-
-    // optional - Paging 3 Integration
-    implementation("androidx.room:room-paging:$room_version")
-
-
-
 
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
@@ -162,7 +98,33 @@ dependencies {
     testImplementation("androidx.arch.core:core-testing:$arch_version")
 
     // optional - Test helpers for Lifecycle runtime
-    testImplementation ("androidx.lifecycle:lifecycle-runtime-testing:$lifecycle_version")
+    testImplementation("androidx.lifecycle:lifecycle-runtime-testing:$lifecycle_version")
 
 
+    var room_version = "2.5.1"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:$room_version")
+    // To use Kotlin Symbol Processing (KSP)
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+
+    // optional - RxJava2 support for Room
+    implementation("androidx.room:room-rxjava2:$room_version")
+
+    // optional - RxJava3 support for Room
+    implementation("androidx.room:room-rxjava3:$room_version")
+
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    implementation("androidx.room:room-guava:$room_version")
+
+    // optional - Test helpers
+    testImplementation("androidx.room:room-testing:$room_version")
+
+    // optional - Paging 3 Integration
+    implementation("androidx.room:room-paging:$room_version")
 }

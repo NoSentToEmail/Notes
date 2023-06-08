@@ -1,5 +1,6 @@
 package com.example.notes
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.InternalCoroutinesApi
 import androidx.room.RoomDatabase
 import androidx.room.Database
+import com.example.notes.R
 import com.example.notes.NotesDatabase
 
 
@@ -95,6 +97,7 @@ class MainActivity : AppCompatActivity(), OnNoteClickListener {
         return true
 
     }
+    @SuppressLint("NotifyDataSetChanged")
     private fun getData(){
         val noteFromDB: LiveData<List<Note>> = viewModel.getNotes()
         noteFromDB.observe(this,  Observer<List<Note>>() {
